@@ -41,6 +41,11 @@ jobs:
       - name: Setup Rust cache
         uses: ./.github/workflows/setup-rust-cache
 
+      - name: Install Gettext
+        run: |
+          sudo apt update
+          sudo apt install gettext
+
       - name: Install mdbook
         uses: ./.github/workflows/install-mdbook
 
@@ -52,11 +57,7 @@ jobs:
           cp -r theme/pkg book/html
           cp -r theme/js book/html
 
-      - name: Generate POT file
-        run: |
-          MDBOOK_OUTPUT='{"xgettext": {"pot-file": "messages.pot", "granularity": 0}}' mdbook build -d po
-
-      - name: Check PO files
+      - name: Test Po Files
         run: |
           for po_file in po/*.po; do
             msgfmt --check "$po_file"
